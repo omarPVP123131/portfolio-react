@@ -18,7 +18,6 @@ import {
 import { SiCplusplus } from "react-icons/si";
 import { RiFlutterFill } from "react-icons/ri";
 import { useInView } from "react-intersection-observer";
-import Typing from "react-typing-animation";
 import { Tilt } from "react-tilt";
 import { ParallaxProvider } from "react-scroll-parallax";
 import "react-circular-progressbar/dist/styles.css";
