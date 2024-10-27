@@ -29,7 +29,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "react-circular-progressbar/dist/styles.css";
 import "swiper/css/autoplay";
-import TypingAnimation from './TypingAnimation'; // Ajusta la ruta según tu estructura de carpetas
+import TypingAnimation from "./TypingAnimation"; // Ajusta la ruta según tu estructura de carpetas
+import { transitionSettings } from "./utils/transitions";
 
 // Tipos
 type Project = {
@@ -97,7 +98,11 @@ const XIcon: React.FC = () => (
   </svg>
 );
 
-const ChevronDownIcon: React.FC = () => (
+type ChevronIconProps = {
+  className?: string;
+};
+
+const ChevronDownIcon: React.FC<ChevronIconProps> = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -108,6 +113,7 @@ const ChevronDownIcon: React.FC = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    className={className} // Añadir className aquí
   >
     <polyline points="6 9 12 15 18 9"></polyline>
   </svg>
@@ -115,13 +121,24 @@ const ChevronDownIcon: React.FC = () => (
 
 const App: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [activeSection, setActiveSection] = useState<string>("inicio");
+  const [activeSection] = useState<string>("inicio");
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { scrollYProgress } = useScroll();
-  const headerRef = useRef<HTMLDivElement>(null);
+
+  const proyectosRef = useRef<HTMLDivElement>(null);
+  const habilidadesRef = useRef<HTMLDivElement>(null);
+  const experienciaRef = useRef<HTMLDivElement>(null);
+  const testimoniosRef = useRef<HTMLDivElement>(null);
+  const contactoRef = useRef<HTMLDivElement>(null);
+  const footeref = useRef<HTMLDivElement>(null);
+  const inicioref = useRef<HTMLDivElement>(null);
+
+  const handleScroll = (ref: React.RefObject<HTMLDivElement>) => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -148,27 +165,27 @@ const App: React.FC = () => {
 
   const projects: Project[] = [
     {
-      title: "Proyecto Integrador",
+      title: "Sistema de Gestión de Pacientes",
       description:
-        "Aplicación web para gestionar proyectos integradores utilizando React y Express.",
-      tags: ["React", "Express", "MongoDB"],
-      image: "/placeholder.svg?height=300&width=400",
-      link: "https://github.com/omarPVP123131/proyecto-integrador",
+        "Un sistema diseñado específicamente para gestionar y administrar información de pacientes, construido con Vite y React para un rendimiento óptimo en un entorno local.",
+      tags: ["Web", "React", "Vite"],
+      image: "./images/proyect1.png",
+      link: "https://github.com/omarPVP123131/veterinaria",
     },
     {
-      title: "Juego de Memoria",
-      description: "Juego de memoria implementado con HTML, CSS y JavaScript.",
-      tags: ["HTML", "CSS", "JavaScript"],
-      image: "/placeholder.svg?height=300&width=400",
-      link: "https://github.com/omarPVP123131/juego-de-memoria",
+      title: "Punto de Venta",
+      description: "Punto de Venta hecho en python con el framework de qt6 y sqlite para una base de datos local",
+      tags: ["Desktop","Python", "Sqlite", "Qt"],
+      image: "/images/proyect2.png",
+      link: "https://github.com/omarPVP123131/pos-python",
     },
     {
-      title: "API de Películas",
+      title: "sistema de punto de venta",
       description:
-        "API RESTful para gestionar información de películas utilizando Node.js y Express.",
-      tags: ["Node.js", "Express", "MongoDB"],
-      image: "/placeholder.svg?height=300&width=400",
-      link: "https://github.com/omarPVP123131/api-peliculas",
+        "Sistema de Punto De Venta completamente portatil la cual maneja una Api Restful propia la cual permite el enlace a la aplicacion de escritorio",
+      tags: ["Multiplataforma","Flutter", "Dart", "Sqlite", "Python"],
+      image: "/images/proyect3.png",
+      link: "https://github.com/omarPVP123131/pos",
     },
   ];
 
@@ -257,7 +274,6 @@ const App: React.FC = () => {
     );
   }
 
-  
   return (
     <ParallaxProvider>
       <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
@@ -292,7 +308,21 @@ const App: React.FC = () => {
                   ].map((item) => (
                     <motion.button
                       key={item}
-                      onClick={() => setActiveSection(item)}
+                      onClick={() => {
+                        handleScroll(
+                          item === "inicio"
+                            ? inicioref
+                            : item === "proyectos"
+                            ? proyectosRef
+                            : item === "habilidades"
+                            ? habilidadesRef
+                            : item === "experiencia"
+                            ? experienciaRef
+                            : item === "testimonios"
+                            ? testimoniosRef
+                            : contactoRef
+                        );
+                      }}
                       className={`px-3 py-2 rounded-md text-sm font-medium ${
                         activeSection === item
                           ? "text-blue-600 dark:text-blue-400"
@@ -304,6 +334,7 @@ const App: React.FC = () => {
                       {item.charAt(0).toUpperCase() + item.slice(1)}
                     </motion.button>
                   ))}
+                  {/* Dark Mode Button */}
                   <motion.button
                     onClick={toggleDarkMode}
                     className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
@@ -316,6 +347,7 @@ const App: React.FC = () => {
 
                 {/* Mobile menu button */}
                 <div className="md:hidden flex items-center">
+                  {/* Botón de modo oscuro */}
                   <motion.button
                     onClick={toggleDarkMode}
                     className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 mr-2"
@@ -335,7 +367,6 @@ const App: React.FC = () => {
                 </div>
               </div>
             </div>
-
             {/* Mobile Menu */}
             <AnimatePresence>
               {isMenuOpen && (
@@ -353,12 +384,23 @@ const App: React.FC = () => {
                       "habilidades",
                       "experiencia",
                       "testimonios",
-                      "contacto",
                     ].map((item) => (
                       <motion.button
                         key={item}
                         onClick={() => {
-                          setActiveSection(item);
+                          handleScroll(
+                            item === "inicio"
+                              ? inicioref
+                              : item === "proyectos"
+                              ? proyectosRef
+                              : item === "habilidades"
+                              ? habilidadesRef
+                              : item === "experiencia"
+                              ? experienciaRef
+                              : item === "testimonios"
+                              ? testimoniosRef
+                              : contactoRef
+                          );
                           setIsMenuOpen(false);
                         }}
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 w-full text-left"
@@ -380,44 +422,67 @@ const App: React.FC = () => {
             style={{ scaleX: scrollYProgress }}
           />
 
-          {/* Hero Section */}
-          <section className="pt-20 pb-10 bg-gradient-to-r from-blue-500 to-purple-600">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center py-16">
+          {/* Hero Section Mejorado */}
+          <section
+            id="inicio"
+            ref={inicioref}
+            className="min-h-screen pt-20 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 dark:from-blue-900/30 dark:to-purple-900/30" />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+              <div className="flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] text-center">
                 <motion.h1
-                  className="text-4xl  tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl"
+                  className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r 
+                    from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.8 }}
                 >
                   Omar Palomares Velasco
                 </motion.h1>
-                <TypingAnimation />
 
-                <motion.div
-                  className="mt-5 flex justify-center space-x-4"
+                <motion.p
+                  className="mt-6 text-xl md:text-2xl text-gray-700 dark:text-gray-300"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  <TypingAnimation darkMode={darkMode} />
+                </motion.p>
+
+                <motion.div
+                  className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
                 >
                   <motion.a
-                    href="#proyectos"
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-blue-700 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleScroll(proyectosRef)}
+                    className="px-8 py-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 
+                   dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200
+                   flex items-center justify-center space-x-2 cursor-pointer"
+                    initial={transitionSettings.fadeInUp.initial}
+                    animate={transitionSettings.fadeInUp.animate}
+                    transition={transitionSettings.fadeInUp.transition}
+                    whileHover={transitionSettings.hoverScale}
+                    whileTap={transitionSettings.tapScale}
                   >
-                    Ver Proyectos
-                    <ChevronDownIcon />
+                    <span>Ver Proyectos</span>
+                    <ChevronDownIcon className="w-5 h-5" />
                   </motion.a>
+
                   <motion.a
-                    href="/cv/cv.pdf"
+                    href="cv/cv.pdf"
                     download
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    className="px-8 py-3 rounded-full border-2 border-blue-600 text-blue-600 
+                      hover:bg-blue-600 hover:text-white dark:border-blue-400 dark:text-blue-400 
+                      dark:hover:bg-blue-400 dark:hover:text-gray-900 transition-all duration-200
+                      flex items-center justify-center space-x-2"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    Descargar CV
-                    <FaDownload className="ml-2" />
+                    <span>Descargar CV</span>
+                    <FaDownload className="w-5 h-5" />
                   </motion.a>
                 </motion.div>
               </div>
@@ -425,7 +490,11 @@ const App: React.FC = () => {
           </section>
 
           {/* Projects Section */}
-          <section id="proyectos" className="py-16 bg-white dark:bg-gray-800">
+          <section
+            ref={proyectosRef}
+            id="proyectos"
+            className="py-16 bg-white dark:bg-gray-800"
+          >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <motion.h2
                 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-8"
@@ -445,6 +514,7 @@ const App: React.FC = () => {
 
           {/* Skills Section */}
           <section
+            ref={habilidadesRef}
             id="habilidades"
             className="py-16 bg-gray-50 dark:bg-gray-900"
           >
@@ -466,7 +536,11 @@ const App: React.FC = () => {
           </section>
 
           {/* Experience Section */}
-          <section id="experiencia" className="py-16 bg-white dark:bg-gray-800">
+          <section
+            ref={experienciaRef}
+            id="experiencia"
+            className="py-16 bg-white dark:bg-gray-800"
+          >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <motion.h2
                 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-8"
@@ -486,6 +560,7 @@ const App: React.FC = () => {
 
           {/* Testimonials Section */}
           <section
+            ref={testimoniosRef}
             id="testimonios"
             className="py-16 bg-gray-50 dark:bg-gray-900"
           >
@@ -506,12 +581,8 @@ const App: React.FC = () => {
                 pagination={{ clickable: true }}
                 autoplay={{ delay: 5000 }}
                 breakpoints={{
-                  640: {
-                    slidesPerView: 2,
-                  },
-                  768: {
-                    slidesPerView: 3,
-                  },
+                  640: { slidesPerView: 2 },
+                  768: { slidesPerView: 3 },
                 }}
               >
                 {testimonials.map((testimonial, index) => (
@@ -522,9 +593,12 @@ const App: React.FC = () => {
               </Swiper>
             </div>
           </section>
-
           {/* Contact Section */}
-          <section id="contacto" className="py-16 bg-white dark:bg-gray-800">
+          <section
+            ref={contactoRef}
+            id="contacto"
+            className="py-16 bg-white dark:bg-gray-800"
+          >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <motion.h2
                 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-8"
@@ -604,7 +678,7 @@ const App: React.FC = () => {
           </section>
 
           {/* Footer */}
-          <footer className="bg-gray-900 text-white py-8">
+          <footer ref={footeref} className="bg-gray-900 text-white py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                 <p className="text-center md:text-left">

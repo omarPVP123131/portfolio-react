@@ -1,0 +1,30 @@
+.typing-container {
+  margin-top: 1rem;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.25rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.light-text {
+  color: #1f2937; /* Color oscuro para modo claro */
+}
+
+.dark-text {
+  color: #f1f5f9; /* Gris claro para modo oscuro */
+}
+
+.blinking-cursor {
+  display: inline-block;
+  margin-left: 0.1rem;
+  background-color: currentColor;
+  width: 2px;
+  height: 1.2em;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

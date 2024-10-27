@@ -1,34 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import Typing from 'react-typing-animation';
+import './typing.css';
 
-const TypingAnimation: React.FC = () => {
-    const phrases = [
-      "Desarrollador Full Stack",
-      "Experto en React y Node.js",
-      "Creador de soluciones innovadoras",
-    ];
-  
-    return (
-      <motion.div
-        className="mt-3 max-w-md mx-auto text-base text-gray-100 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <Typing loop={true} speed={100}>
-          {phrases.map((phrase, index) => (
-            <React.Fragment key={index}>
-              <span>{phrase}</span>
-              {/* Cambiar count a la longitud de la frase actual */}
-              <Typing.Backspace count={phrase.length} delay={2000} />
-            </React.Fragment>
-          ))}
-          {/* Asegúrate de que Typing.Reset se llame correctamente */}
-          <Typing.Reset delay={500} />
-        </Typing>
-      </motion.div>
-    );
-  };
-  
-  export default TypingAnimation;
+interface TypingAnimationProps {
+  darkMode: boolean;
+}
+
+const TypingAnimation: React.FC<TypingAnimationProps> = ({ darkMode }) => {
+  const phrases = [
+    "Desarrollador Full Stack",
+    "Experto en React y Node.js",
+    "Creador de soluciones innovadoras",
+  ];
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentPhrase = phrases[currentPhraseIndex];
+    const typingSpeed = isDeleting ? 50 : 100;
+
+    const typingEffect = setTimeout(() => {
+      if (!isDeleting && displayedText.length < currentPhrase.length) {
+        setDisplayedText(currentPhrase.slice(0, displayedText.length + 1));
+      } else if (isDeleting && displayedText.length > 0) {
+        setDisplayedText(currentPhrase.slice(0, displayedText.length - 1));
+      } else {
+        setIsDeleting(!isDeleting);
+        if (!isDeleting) {
+          setTimeout(() => {
+            setCurrentPhraseIndex((prevIndex) => (prevIndex + 1) % phrases.length);
+          }, 1000); // Mayor pausa entre frases
+        }
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(typingEffect);
+  }, [displayedText, isDeleting, phrases, currentPhraseIndex]);
+
+  return (
+    <motion.div
+      className={`typing-container ${darkMode ? 'dark-text' : 'light-text'}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
+      {displayedText}
+      <span className="blinking-cursor">|</span>
+    </motion.div>
+  );
+};
+
+export default TypingAnimation;

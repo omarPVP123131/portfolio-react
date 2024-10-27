@@ -11,6 +11,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "babel-runtime": "^6.26.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc-cae764ce-20241025",
     "framer-motion": "^11.11.10",
     "react": "^18.3.1",
     "react-circular-progressbar": "^2.1.0",
