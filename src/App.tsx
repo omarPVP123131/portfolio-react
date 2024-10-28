@@ -40,7 +40,9 @@ import "react-circular-progressbar/dist/styles.css";
 import "swiper/css/autoplay";
 import TypingAnimation from "./TypingAnimation"; // Ajusta la ruta según tu estructura de carpetas
 import { Tooltip as ReactTooltip } from "react-tooltip"; // Asegúrate de que la importación sea correcta
-
+import './app.css';
+import { Code } from "lucide-react";
+import ContactSection from "./ContactSection";
 // Tipos
 type Project = {
   title: string;
@@ -339,23 +341,43 @@ const App: React.FC = () => {
     <ParallaxProvider>
       <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
         <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
-          {/* Navbar */}
-          <motion.nav
-            className="bg-white dark:bg-gray-800 shadow-lg fixed w-full z-50 transition-colors duration-300"
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.5 }}
+        <motion.nav
+      className="bg-white dark:bg-gray-800 shadow-lg fixed w-full z-50 transition-colors duration-300"
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ 
+        duration: 0.5,
+        type: "spring",
+        stiffness: 100
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between items-center h-16">
+          <motion.div
+            className="flex-shrink-0 flex items-center gap-2"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 10
+            }}
           >
-            <div className="max-w-7xl mx-auto px-4">
-              <div className="flex justify-between items-center h-16">
-                <motion.div
-                  className="flex-shrink-0 flex items-center"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
-                    Omar Palomares
-                  </h1>
-                </motion.div>
+            <FaCode 
+              className="w-6 h-6 text-blue-500" 
+              style={{ 
+                filter: "drop-shadow(0 0 8px rgba(59, 130, 246, 0.5))" 
+              }}
+            />
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 bg-size-200 animate-gradient">
+                Omar Palomares
+              </h1>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                Full Stack Developer
+              </span>
+            </div>
+          </motion.div>
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex space-x-8">
@@ -508,7 +530,7 @@ const App: React.FC = () => {
                 >
                   <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full blur-2xl opacity-30 animate-pulse" />
                   <img
-                    src="/images/yo.jpg"
+                    src="/images/yo.png"
                     alt="Omar Palomares"
                     width={300}
                     height={300}
@@ -571,7 +593,7 @@ const App: React.FC = () => {
               </div>
             </motion.div>
             <motion.div
-              className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+              className="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden-on-mobile"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1 }}
@@ -696,88 +718,8 @@ const App: React.FC = () => {
             </div>
           </section>
           {/* Contact Section */}
-          <section
-            ref={contactoRef}
-            id="contacto"
-            className="py-16 bg-white dark:bg-gray-800"
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.h2
-                className="text-3xl font-extrabold text-gray-900 dark:text-white mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                Contacto
-              </motion.h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <motion.div
-                  className="space-y-4"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                    ¡Conectemos!
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    Estoy disponible para proyectos freelance y oportunidades
-                    laborales.
-                  </p>
-                  <div className="flex space-x-4">
-                    <SocialIcon
-                      href="https://github.com/omarPVP123131"
-                      icon={<FaGithub size={24} />}
-                      label="GitHub"
-                    />
-                    <SocialIcon
-                      href="#"
-                      icon={<FaLinkedin size={24} />}
-                      label="LinkedIn"
-                    />
-                    <SocialIcon
-                      href="mailto:tu-email@ejemplo.com"
-                      icon={<FaEnvelope size={24} />}
-                      label="Email"
-                    />
-                  </div>
-                </motion.div>
-                <motion.form
-                  onSubmit={handleSubmit}
-                  className="space-y-4"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <InputField label="Nombre" id="name" type="text" required />
-                  <InputField label="Email" id="email" type="email" required />
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      Mensaje
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={4}
-                      required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    ></textarea>
-                  </div>
-                  <motion.button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Enviar Mensaje
-                  </motion.button>
-                </motion.form>
-              </div>
-            </div>
-          </section>
+
+          <ContactSection contactoRef={contactoRef} />
 
           {/* Footer */}
           <footer ref={footeref} className="bg-gray-900 text-white py-8">
