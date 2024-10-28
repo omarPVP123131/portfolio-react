@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useScroll } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import {
   FaGithub,
   FaLinkedin,
@@ -14,6 +19,10 @@ import {
   FaReact,
   FaNodeJs,
   FaPython,
+  FaExternalLinkAlt,
+  FaCalendarAlt,
+  FaMapMarkerAlt,
+  FaArrowDown,
 } from "react-icons/fa";
 import { SiCplusplus } from "react-icons/si";
 import { RiFlutterFill } from "react-icons/ri";
@@ -30,7 +39,7 @@ import "swiper/css/pagination";
 import "react-circular-progressbar/dist/styles.css";
 import "swiper/css/autoplay";
 import TypingAnimation from "./TypingAnimation"; // Ajusta la ruta según tu estructura de carpetas
-import { transitionSettings } from "./utils/transitions";
+import { Tooltip as ReactTooltip } from "react-tooltip"; // Asegúrate de que la importación sea correcta
 
 // Tipos
 type Project = {
@@ -39,12 +48,13 @@ type Project = {
   tags: string[];
   image: string;
   link: string;
+  github?: string;
 };
 
 type Skill = {
   name: string;
   level: number;
-  icon: React.ReactNode;
+  icon: JSX.Element;
 };
 
 type Experience = {
@@ -174,8 +184,9 @@ const App: React.FC = () => {
     },
     {
       title: "Punto de Venta",
-      description: "Punto de Venta hecho en python con el framework de qt6 y sqlite para una base de datos local",
-      tags: ["Desktop","Python", "Sqlite", "Qt"],
+      description:
+        "Punto de Venta hecho en python con el framework de qt6 y sqlite para una base de datos local",
+      tags: ["Desktop", "Python", "Sqlite", "Qt"],
       image: "/images/proyect2.png",
       link: "https://github.com/omarPVP123131/pos-python",
     },
@@ -183,7 +194,7 @@ const App: React.FC = () => {
       title: "sistema de punto de venta",
       description:
         "Sistema de Punto De Venta completamente portatil la cual maneja una Api Restful propia la cual permite el enlace a la aplicacion de escritorio",
-      tags: ["Multiplataforma","Flutter", "Dart", "Sqlite", "Python"],
+      tags: ["Multiplataforma", "Flutter", "Dart", "Sqlite", "Python"],
       image: "/images/proyect3.png",
       link: "https://github.com/omarPVP123131/pos",
     },
@@ -194,7 +205,7 @@ const App: React.FC = () => {
     { name: "React", level: 85, icon: <FaReact /> },
     { name: "Node.js", level: 80, icon: <FaNodeJs /> },
     { name: "Python", level: 75, icon: <FaPython /> },
-    { name: "C++", level: 70, icon: <SiCplusplus /> },
+    { name: "C++", level: 80, icon: <SiCplusplus /> },
     { name: "Flutter", level: 65, icon: <RiFlutterFill /> },
   ];
 
@@ -254,22 +265,72 @@ const App: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-900 text-white">
+      <div
+        className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 text-white"
+        aria-label="Cargando contenido, por favor espere"
+      >
         <motion.div
+          className="relative flex items-center justify-center"
           animate={{
-            scale: [1, 2, 2, 1, 1],
-            rotate: [0, 0, 270, 270, 0],
-            borderRadius: ["20%", "20%", "50%", "50%", "20%"],
+            scale: [1, 1.3, 1],
+            rotate: [0, 360, 0],
+            backgroundColor: ["#3b82f6", "#6366f1", "#3b82f6"],
+            borderRadius: ["20%", "50%", "20%"],
           }}
           transition={{
-            duration: 2,
+            duration: 1.2,
             ease: "easeInOut",
-            times: [0, 0.2, 0.5, 0.8, 1],
             repeat: Infinity,
-            repeatDelay: 1,
           }}
-          className="w-16 h-16 bg-blue-500"
-        />
+        >
+          {/* Capa adicional de pulso */}
+          <motion.div
+            className="absolute inset-0 w-full h-full bg-blue-500 rounded-full opacity-50"
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.6, 0.3, 0.6],
+            }}
+            transition={{
+              duration: 1.8,
+              ease: "easeInOut",
+              repeat: Infinity,
+            }}
+          />
+
+          {/* Ícono central con rebote */}
+          <motion.div
+            className="w-16 h-16 bg-blue-500 rounded-full shadow-2xl"
+            animate={{
+              scale: [0.9, 1.3, 0.9],
+              rotate: [0, 360, 0],
+              borderRadius: ["50%", "20%", "50%"],
+              boxShadow: [
+                "0px 0px 10px rgba(59, 130, 246, 0.5)",
+                "0px 0px 20px rgba(99, 102, 241, 0.7)",
+                "0px 0px 10px rgba(59, 130, 246, 0.5)",
+              ],
+            }}
+            transition={{
+              duration: 1.2,
+              ease: "easeInOut",
+              repeat: Infinity,
+            }}
+          />
+        </motion.div>
+
+        {/* Texto de carga animado */}
+        <motion.p
+          className="absolute bottom-10 text-lg text-gray-300"
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: [10, -10, 10], opacity: [0, 1, 0] }}
+          transition={{
+            duration: 1.5,
+            ease: "easeInOut",
+            repeat: Infinity,
+          }}
+        >
+          Cargando...
+        </motion.p>
       </div>
     );
   }
@@ -422,71 +483,112 @@ const App: React.FC = () => {
             style={{ scaleX: scrollYProgress }}
           />
 
-          {/* Hero Section Mejorado */}
-          <section
-            id="inicio"
-            ref={inicioref}
-            className="min-h-screen pt-20 relative overflow-hidden"
-          >
+          {/* Modified Hero Section */}
+          <section className="min-h-screen pt-20 relative overflow-hidden flex items-center">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 dark:from-blue-900/30 dark:to-purple-900/30" />
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-              <div className="flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] text-center">
-                <motion.h1
-                  className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r 
-                    from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                >
-                  Omar Palomares Velasco
-                </motion.h1>
-
-                <motion.p
-                  className="mt-6 text-xl md:text-2xl text-gray-700 dark:text-gray-300"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                >
-                  <TypingAnimation darkMode={darkMode} />
-                </motion.p>
-
+            <div
+              className="absolute inset-0 opacity-30 dark:opacity-20"
+              style={{
+                backgroundImage:
+                  'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+              }}
+            />
+            <motion.div
+              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-12 lg:gap-24">
                 <motion.div
-                  className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="relative"
+                  initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.8, type: "spring" }}
                 >
-                  <motion.a
-                    onClick={() => handleScroll(proyectosRef)}
-                    className="px-8 py-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 
-                   dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200
-                   flex items-center justify-center space-x-2 cursor-pointer"
-                    initial={transitionSettings.fadeInUp.initial}
-                    animate={transitionSettings.fadeInUp.animate}
-                    transition={transitionSettings.fadeInUp.transition}
-                    whileHover={transitionSettings.hoverScale}
-                    whileTap={transitionSettings.tapScale}
-                  >
-                    <span>Ver Proyectos</span>
-                    <ChevronDownIcon className="w-5 h-5" />
-                  </motion.a>
-
-                  <motion.a
-                    href="cv/cv.pdf"
-                    download
-                    className="px-8 py-3 rounded-full border-2 border-blue-600 text-blue-600 
-                      hover:bg-blue-600 hover:text-white dark:border-blue-400 dark:text-blue-400 
-                      dark:hover:bg-blue-400 dark:hover:text-gray-900 transition-all duration-200
-                      flex items-center justify-center space-x-2"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <span>Descargar CV</span>
-                    <FaDownload className="w-5 h-5" />
-                  </motion.a>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full blur-2xl opacity-30 animate-pulse" />
+                  <img
+                    src="/images/yo.jpg"
+                    alt="Omar Palomares"
+                    width={300}
+                    height={300}
+                    className="rounded-full border-4 border-white dark:border-gray-800 shadow-2xl object-cover z-10 relative"
+                  />
                 </motion.div>
+
+                <div className="text-center lg:text-left max-w-2xl">
+                  <motion.h1
+                    className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r 
+                from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 leading-tight"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                  >
+                    Omar Palomares Velasco
+                  </motion.h1>
+
+                  <motion.div
+                    className="mt-6 text-xl md:text-2xl"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                  >
+                    <TypingAnimation darkMode={darkMode} />
+                  </motion.div>
+
+                  <motion.div
+                    className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                  >
+                    <button
+                      onClick={() => handleScroll(proyectosRef)}
+                      className={`px-8 py-3 rounded-full ${
+                        darkMode
+                          ? "bg-blue-500 hover:bg-blue-600 text-white"
+                          : "bg-blue-600 hover:bg-blue-700 text-white"
+                      } transition-colors duration-200 flex items-center justify-center space-x-2`}
+                    >
+                      <span>Ver Proyectos</span>
+                      <FaArrowDown className="w-5 h-5" />
+                    </button>
+
+                    <a
+                      href="/cv/cv.pdf"
+                      download
+                      className={`px-8 py-3 rounded-full border-2 ${
+                        darkMode
+                          ? "border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-gray-900"
+                          : "border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
+                      } transition-all duration-200 flex items-center justify-center space-x-2`}
+                    >
+                      <span>Descargar CV</span>
+                      <FaDownload className="w-5 h-5" />
+                    </a>
+                  </motion.div>
+                </div>
               </div>
-            </div>
+            </motion.div>
+            <motion.div
+              className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1 }}
+            >
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                className="text-gray-400 dark:text-gray-500"
+              >
+                <div
+                  onClick={() => handleScroll(contactoRef)}
+                  className="cursor-pointer flex items-center justify-center transition-colors duration-200"
+                >
+                  <ChevronDownIcon className="h-8 w-8" />
+                </div>
+              </motion.div>
+            </motion.div>
           </section>
 
           {/* Projects Section */}
@@ -738,44 +840,76 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({
   });
 
   return (
-    <Tilt options={{ max: 25, scale: 1.05 }}>
+    <Tilt options={{ max: 25, scale: 1.05 }} className="w-full">
       <motion.div
         ref={ref}
-        className="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:transform hover:scale-105"
         initial={{ opacity: 0, y: 50 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5, delay: index * 0.1 }}
+        className="h-full"
       >
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-48 object-cover"
-        />
-        <div className="p-6">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-            {project.title}
-          </h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            {project.description}
-          </p>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {project.tags.map((tag, tagIndex) => (
-              <span
-                key={tagIndex}
-                className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-sm"
+        <div className="group relative h-full rounded-xl overflow-hidden bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          <div className="relative h-48 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+            <img
+              src={project.image}
+              alt={project.title}
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder.svg";
+              }}
+              className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+            />
+            <div className="absolute top-4 right-4 z-20 flex gap-2">
+              {project.github && (
+                <a
+                  href={project.github}
+                  className="p-2 bg-black/30 backdrop-blur-sm rounded-full hover:bg-black/50 transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaGithub className="w-5 h-5 text-white" />
+                </a>
+              )}
+              <a
+                href={project.link}
+                className="p-2 bg-black/30 backdrop-blur-sm rounded-full hover:bg-black/50 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                {tag}
-              </span>
-            ))}
+                <FaExternalLinkAlt className="w-5 h-5 text-white" />
+              </a>
+            </div>
           </div>
-          <a
-            href={project.link}
-            className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Ver Proyecto
-          </a>
+
+          <div className="relative p-6">
+            <div className="flex flex-wrap gap-2 mb-4">
+              {project.tags.map((tag, tagIndex) => (
+                <span
+                  key={tagIndex}
+                  className="px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              {project.title}
+            </h3>
+
+            <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+              {project.description}
+            </p>
+
+            <motion.div
+              className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: inView ? 1 : 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            />
+          </div>
         </div>
       </motion.div>
     </Tilt>
@@ -791,31 +925,85 @@ const SkillCard: React.FC<{ skill: Skill; index: number }> = ({
     threshold: 0.1,
   });
 
+  const getLevelColor = (level: number) => {
+    if (level >= 90) return "bg-green-500 dark:bg-green-400";
+    if (level >= 70) return "bg-blue-500 dark:bg-blue-400";
+    if (level >= 50) return "bg-yellow-500 dark:bg-yellow-400";
+    return "bg-red-500 dark:bg-red-400";
+  };
+
+  const getLevelText = (level: number) => {
+    if (level >= 90) return "Experto";
+    if (level >= 70) return "Avanzado";
+    if (level >= 50) return "Intermedio";
+    return "Principiante";
+  };
+
   return (
     <motion.div
       ref={ref}
-      className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg"
-      initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
+      className="backdrop-blur-sm bg-white/90 dark:bg-gray-800/90 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+      initial={{ opacity: 0, y: 50 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-lg font-medium text-gray-900 dark:text-white">
-          {skill.name}
-        </span>
-        {skill.icon}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          {skill.icon && (
+            <motion.div
+              whileHover={{ scale: 1.2, rotate: 10 }}
+              className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg"
+              data-tip={skill.name}
+              data-for={`tooltip-${skill.name}`}
+            >
+              {skill.icon}
+            </motion.div>
+          )}
+          <div className="space-y-1">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {skill.name}
+            </h3>
+            <span className="px-2 py-1 text-xs font-semibold text-gray-700 bg-gray-200 rounded-full dark:text-gray-100 dark:bg-gray-600">
+              {getLevelText(skill.level)}
+            </span>
+          </div>
+        </div>
+        <div className="text-right">
+          <CountUp
+            end={skill.level}
+            suffix="%"
+            duration={2}
+            className="text-2xl font-bold text-gray-900 dark:text-white"
+          />
+        </div>
       </div>
-      <div className="w-full h-4 bg-gray-200 dark:bg-gray-600 rounded-full">
+
+      <div className="relative w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-blue-600 dark:bg-blue-400 rounded-full"
+          className={`h-full rounded-full ${getLevelColor(skill.level)}`}
           initial={{ width: 0 }}
           animate={inView ? { width: `${skill.level}%` } : {}}
           transition={{ duration: 1, delay: 0.5 }}
-        />
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shine" />
+        </motion.div>
       </div>
-      <div className="mt-2 text-right">
-        <CountUp end={skill.level} suffix="%" duration={2} />
-      </div>
+
+      <ReactTooltip id={`tooltip-${skill.name}`} place="top" />
+
+      <style>{`
+  @keyframes shine {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+  .animate-shine {
+    animation: shine 2s infinite linear;
+  }
+`}</style>
     </motion.div>
   );
 };
@@ -832,63 +1020,126 @@ const ExperienceCard: React.FC<{ experience: Experience; index: number }> = ({
   return (
     <motion.div
       ref={ref}
-      className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg"
+      className="group relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300"
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      <div className="flex items-center mb-4">
-        <div className="mr-4 text-blue-600 dark:text-blue-400">
-          {experience.icon}
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-            {experience.position}
-          </h3>
-          <h4 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-            {experience.company}
-          </h4>
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-500" />
+
+      <div className="relative">
+        <div className="flex items-start space-x-4">
+          <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+            {experience.icon}
+          </div>
+
+          <div className="flex-grow">
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {experience.position}
+                </h3>
+                <h4 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+                  {experience.company}
+                </h4>
+              </div>
+
+              <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                <FaCalendarAlt className="w-4 h-4" />
+                <span>{experience.period}</span>
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              {experience.description.map((item, i) => (
+                <div key={i} className="flex items-start space-x-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 mt-2" />
+                  <p className="text-gray-600 dark:text-gray-300 flex-1">
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-      <p className="text-gray-600 dark:text-gray-300 mb-4">
-        {experience.period}
-      </p>
-      <ul className="list-disc list-inside text-gray-600 dark:text-gray-300">
-        {experience.description.map((item, i) => (
-          <li key={i}>{item}</li>
-        ))}
-      </ul>
+
+      {/* Bottom gradient line */}
+      <motion.div
+        className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: inView ? 1 : 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      />
     </motion.div>
   );
 };
 
-const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
-  testimonial,
-}) => {
+const TestimonialCard: React.FC<{
+  testimonial: Testimonial;
+  index?: number;
+}> = ({ testimonial, index = 0 }) => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
   return (
-    <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg">
-      <div className="flex items-center mb-4">
-        <img
-          src={testimonial.avatar}
-          alt={testimonial.name}
-          className="w-12 h-12 rounded-full mr-4"
-        />
-        <div>
-          <h4 className="text-lg font-bold text-gray-900 dark:text-white">
-            {testimonial.name}
-          </h4>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            {testimonial.position}
-          </p>
+    <motion.div
+      ref={ref}
+      className="group relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg"
+      initial={{ opacity: 0, y: 50 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileHover={{ y: -5 }}
+    >
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-500" />
+
+      <div className="relative">
+        <div className="absolute -top-2 -left-2 text-6xl text-blue-500/20 dark:text-blue-400/20 font-serif">
+          "
+        </div>
+
+        <p className="text-gray-600 dark:text-gray-300 italic mb-6 relative z-10 pt-4">
+          {testimonial.content}
+        </p>
+
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <img
+              src={testimonial.avatar}
+              alt={testimonial.name}
+              className="w-14 h-14 rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-md"
+            />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-pulse" />
+          </div>
+
+          <div>
+            <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              {testimonial.name}
+            </h4>
+            <div className="flex items-center space-x-2">
+              <FaMapMarkerAlt className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                {testimonial.position}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-      <p className="text-gray-600 dark:text-gray-300 italic">
-        "{testimonial.content}"
-      </p>
-    </div>
+
+      {/* Bottom gradient line */}
+      <motion.div
+        className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-b-xl"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: inView ? 1 : 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      />
+    </motion.div>
   );
 };
-
 const SocialIcon: React.FC<{
   href: string;
   icon: React.ReactNode;

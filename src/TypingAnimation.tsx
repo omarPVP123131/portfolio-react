@@ -30,7 +30,7 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({ darkMode }) => {
         if (!isDeleting) {
           setTimeout(() => {
             setCurrentPhraseIndex((prevIndex) => (prevIndex + 1) % phrases.length);
-          }, 1000); // Mayor pausa entre frases
+          }, 1800); // Mayor pausa entre frases
         }
       }
     }, typingSpeed);
