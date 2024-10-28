@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import './typing.css';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import "./typing.css";
 
 interface TypingAnimationProps {
   darkMode: boolean;
@@ -11,9 +11,27 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({ darkMode }) => {
     "Desarrollador Full Stack",
     "Experto en React y Node.js",
     "Creador de soluciones innovadoras",
+    "Apasionado por el diseño de interfaces",
+    "Entusiasta de la programación ágil",
+    "Desarrollador de aplicaciones móviles",
+    "Especialista en bases de datos",
+    "Amante del código limpio y mantenible",
+    "Consultor en ciberseguridad",
+    "Entusiasta de la inteligencia artificial",
+    "Colaborador en proyectos de código abierto",
+    "Instructor de programación",
+    "Desarrollador de APIs RESTful",
+    "Experto en desarrollo de software escalable",
+    "Ingeniero de software con enfoque en UX/UI",
+    "Desarrollador de microservicios",
+    "Facilitador de talleres de tecnología",
+    "Analista de datos y visualización",
+    "Mentor para nuevos desarrolladores",
+    "Aficionado a las últimas tendencias tecnológicas",
   ];
+
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState('');
+  const [displayedText, setDisplayedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -29,7 +47,9 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({ darkMode }) => {
         setIsDeleting(!isDeleting);
         if (!isDeleting) {
           setTimeout(() => {
-            setCurrentPhraseIndex((prevIndex) => (prevIndex + 1) % phrases.length);
+            setCurrentPhraseIndex(
+              (prevIndex) => (prevIndex + 1) % phrases.length
+            );
           }, 1800); // Mayor pausa entre frases
         }
       }
@@ -40,7 +60,7 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({ darkMode }) => {
 
   return (
     <motion.div
-      className={`typing-container ${darkMode ? 'dark-text' : 'light-text'}`}
+      className={`typing-container ${darkMode ? "dark-text" : "light-text"}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}

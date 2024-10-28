@@ -3,7 +3,6 @@ import {
   motion,
   AnimatePresence,
   useScroll,
-  useTransform,
 } from "framer-motion";
 import {
   FaGithub,
@@ -41,7 +40,6 @@ import "swiper/css/autoplay";
 import TypingAnimation from "./TypingAnimation"; // Ajusta la ruta según tu estructura de carpetas
 import { Tooltip as ReactTooltip } from "react-tooltip"; // Asegúrate de que la importación sea correcta
 import './app.css';
-import { Code } from "lucide-react";
 import ContactSection from "./ContactSection";
 // Tipos
 type Project = {
@@ -259,11 +257,6 @@ const App: React.FC = () => {
       avatar: "/placeholder.svg?height=100&width=100",
     },
   ];
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Aquí iría la lógica para manejar el envío del formulario
-  };
 
   if (isLoading) {
     return (
@@ -741,8 +734,8 @@ const App: React.FC = () => {
                     label="LinkedIn"
                   />
                   <SocialIcon
-                    href="mailto:tu-email@ejemplo.com"
-                    icon={<FaEnvelope size={20} />}
+                  href="mailto:omarpalvel@gmail.com"
+                  icon={<FaEnvelope size={20} />}
                     label="Email"
                   />
                 </div>
