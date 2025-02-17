@@ -1,51 +1,13 @@
 import React, { useState } from "react";
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
-import emailjs from "emailjs-com";
+import { Mail, Github, Linkedin, Loader2 } from "lucide-react";
+import emailjs from "@emailjs/browser";
+import { toast } from "sonner";
 
-// Constantes de EmailJS - Reemplaza con tus credenciales
+// EmailJS constants - Replace with your credentials
 const EMAILJS_SERVICE_ID = "service_3nqqzjg";
 const EMAILJS_TEMPLATE_ID = "template_11t9p2s";
 const EMAILJS_PUBLIC_KEY = "ynpovkgOtTUDsrurL";
 
-interface CustomAlertProps {
-  children: React.ReactNode;
-  className?: string;
-  status?: "success" | "error";
-}
-
-interface CustomAlertTitleProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-interface CustomAlertDescriptionProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-const CustomAlert: React.FC<CustomAlertProps> = ({
-  children,
-  className = "",
-  status = "success",
-}) => {
-  return (
-    <div className={`p-4 rounded-lg mb-4 ${className}`} role="alert">
-      {children}
-    </div>
-  );
-};
-
-const CustomAlertTitle: React.FC<CustomAlertTitleProps> = ({
-  children,
-  className = "",
-}) => <h3 className={`text-lg font-semibold mb-1 ${className}`}>{children}</h3>;
-
-const CustomAlertDescription: React.FC<CustomAlertDescriptionProps> = ({
-  children,
-  className = "",
-}) => <p className={`text-sm ${className}`}>{children}</p>;
-
-// Rest of the interfaces remain the same...
 interface SocialIconProps {
   href: string;
   icon: React.ReactNode;
@@ -58,8 +20,9 @@ interface InputFieldProps {
   type: string;
   required: boolean;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   error?: string;
+  placeholder?: string;
 }
 
 interface FormData {
@@ -76,11 +39,6 @@ interface FormErrors {
   message?: string;
 }
 
-interface SubmitStatus {
-  status: "" | "success" | "error";
-  message: string;
-}
-
 interface ContactSectionProps {
   contactoRef: React.RefObject<HTMLElement>;
 }
@@ -90,7 +48,7 @@ const SocialIcon: React.FC<SocialIconProps> = ({ href, icon, label }) => (
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
+    className="p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
     aria-label={label}
   >
     {icon}
@@ -105,30 +63,56 @@ const InputField: React.FC<InputFieldProps> = ({
   value,
   onChange,
   error,
+  placeholder,
 }) => (
-  <div className="space-y-1">
+  <div className="space-y-2">
     <label
       htmlFor={id}
       className="block text-sm font-medium text-gray-700 dark:text-gray-300"
     >
       {label}
+      {required && <span className="text-red-500 ml-1">*</span>}
     </label>
-    <input
-      type={type}
-      id={id}
-      name={id}
-      required={required}
-      value={value}
-      onChange={onChange}
-      className={`mt-1 block w-full rounded-md shadow-sm
-        ${
-          error
-            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-        }
-        dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
-    />
-    {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+    {type === "textarea" ? (
+      <textarea
+        id={id}
+        name={id}
+        required={required}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        rows={4}
+        className={`w-full px-4 py-2 rounded-lg border transition-colors duration-200
+          ${
+            error
+              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+              : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+          }
+          dark:bg-gray-700 dark:border-gray-600 dark:text-white
+          placeholder:text-gray-400 dark:placeholder:text-gray-500`}
+      />
+    ) : (
+      <input
+        type={type}
+        id={id}
+        name={id}
+        required={required}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`w-full px-4 py-2 rounded-lg border transition-colors duration-200
+          ${
+            error
+              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+              : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+          }
+          dark:bg-gray-700 dark:border-gray-600 dark:text-white
+          placeholder:text-gray-400 dark:placeholder:text-gray-500`}
+      />
+    )}
+    {error && (
+      <p className="text-sm text-red-600 dark:text-red-400 mt-1">{error}</p>
+    )}
   </div>
 );
 
@@ -141,10 +125,6 @@ const ContactSection: React.FC<ContactSectionProps> = ({ contactoRef }) => {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
-  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>({
-    status: "",
-    message: "",
-  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
@@ -155,6 +135,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ contactoRef }) => {
       ...prev,
       [name]: value,
     }));
+    // Clear error when user starts typing
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({
         ...prev,
@@ -178,13 +159,14 @@ const ContactSection: React.FC<ContactSectionProps> = ({ contactoRef }) => {
       newErrors.email = "Email inválido";
     }
 
-    // Validación opcional para el teléfono (si se desea)
-    if (formData.phone && !/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = "Número de teléfono inválido. Debe tener 10 dígitos.";
+    if (formData.phone && !/^\+?\d{10,}$/.test(formData.phone.replace(/\s/g, ''))) {
+      newErrors.phone = "Formato inválido. Incluye el código de país (ej: +52)";
     }
 
     if (!formData.message.trim()) {
       newErrors.message = "El mensaje es requerido";
+    } else if (formData.message.length < 10) {
+      newErrors.message = "El mensaje debe tener al menos 10 caracteres";
     }
 
     setErrors(newErrors);
@@ -194,22 +176,24 @@ const ContactSection: React.FC<ContactSectionProps> = ({ contactoRef }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      toast.error("Por favor, corrige los errores en el formulario");
+      return;
+    }
 
     setIsSubmitting(true);
-    setSubmitStatus({ status: "", message: "" });
+
+    const toastId = toast.loading("Enviando mensaje...");
 
     try {
-      // Preparar los parámetros para EmailJS
       const templateParams = {
         from_name: formData.name,
         from_email: formData.email,
         from_phone: formData.phone,
         message: formData.message,
-        to_name: "Admin", // Puedes personalizar esto
+        to_name: "Admin",
       };
 
-      // Enviar el email usando EmailJS
       const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
@@ -218,22 +202,24 @@ const ContactSection: React.FC<ContactSectionProps> = ({ contactoRef }) => {
       );
 
       if (response.status === 200) {
-        setSubmitStatus({
-          status: "success",
-          message: "¡Mensaje enviado con éxito! Me pondré en contacto pronto.",
+        toast.success("¡Mensaje enviado con éxito! Me pondré en contacto pronto.", {
+          id: toastId,
+          duration: 5000,
         });
 
-        setFormData({ name: "", email: "", phone: "", message: "" }); // Reiniciar todos los campos
+        setFormData({ name: "", email: "", phone: "", message: "" });
       } else {
         throw new Error("Failed to send email");
       }
     } catch (error) {
       console.error("Error sending email:", error);
-      setSubmitStatus({
-        status: "error",
-        message:
-          "Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.",
-      });
+      toast.error(
+        "Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.",
+        {
+          id: toastId,
+          duration: 5000,
+        }
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -243,74 +229,51 @@ const ContactSection: React.FC<ContactSectionProps> = ({ contactoRef }) => {
     <section
       ref={contactoRef}
       id="contacto"
-      className="py-16 bg-white dark:bg-gray-800"
+      className="py-16 bg-white dark:bg-gray-800 min-h-screen"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-3xl font-extrabold text-gray-900 dark:text-white text-center mb-12">
-          Contacto
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            ¡Hablemos!
+          </h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            ¿Tienes un proyecto en mente? Estoy disponible para colaboraciones y
+            nuevas oportunidades.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="space-y-6">
-            <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-sm">
+          <div className="space-y-8">
+            <div className="bg-gray-50 dark:bg-gray-700 p-8 rounded-xl shadow-sm">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                ¡Conectemos!
+                Conectemos
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
+              <p className="text-gray-600 dark:text-gray-300 mb-8">
                 Estoy disponible para proyectos freelance y oportunidades
-                laborales. ¡Hablemos sobre cómo puedo ayudar en tu próximo
+                laborales. ¡Conversemos sobre cómo puedo ayudar en tu próximo
                 proyecto!
               </p>
-              <div className="flex space-x-6">
+              <div className="flex space-x-4">
                 <SocialIcon
                   href="https://github.com/omarPVP123131"
-                  icon={<FaGithub size={28} />}
+                  icon={<Github size={24} />}
                   label="GitHub"
                 />
                 <SocialIcon
                   href="#"
-                  icon={<FaLinkedin size={28} />}
+                  icon={<Linkedin size={24} />}
                   label="LinkedIn"
                 />
                 <SocialIcon
                   href="mailto:omarpalvel@gmail.com"
-                  icon={<FaEnvelope size={28} />}
+                  icon={<Mail size={24} />}
                   label="Email"
                 />
               </div>
             </div>
           </div>
 
-          <div>
-            {submitStatus.status && (
-              <CustomAlert
-                className={
-                  submitStatus.status === "success"
-                    ? "bg-green-50 dark:bg-green-900/30"
-                    : "bg-red-50 dark:bg-red-900/30"
-                }
-              >
-                <CustomAlertTitle
-                  className={
-                    submitStatus.status === "success"
-                      ? "text-green-800 dark:text-green-300"
-                      : "text-red-800 dark:text-red-300"
-                  }
-                >
-                  {submitStatus.status === "success" ? "¡Éxito!" : "Error"}
-                </CustomAlertTitle>
-                <CustomAlertDescription
-                  className={
-                    submitStatus.status === "success"
-                      ? "text-green-700 dark:text-green-200"
-                      : "text-red-700 dark:text-red-200"
-                  }
-                >
-                  {submitStatus.message}
-                </CustomAlertDescription>
-              </CustomAlert>
-            )}
-
+          <div className="bg-white dark:bg-gray-700 p-8 rounded-xl shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-6">
               <InputField
                 label="Nombre"
@@ -320,6 +283,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ contactoRef }) => {
                 value={formData.name}
                 onChange={handleChange}
                 error={errors.name}
+                placeholder="Tu nombre completo"
               />
               <InputField
                 label="Email"
@@ -329,74 +293,42 @@ const ContactSection: React.FC<ContactSectionProps> = ({ contactoRef }) => {
                 value={formData.email}
                 onChange={handleChange}
                 error={errors.email}
+                placeholder="tu@email.com"
               />
               <InputField
-                label="Teléfono (opcional, Ingresa Tu Codigo De area, Ejemplo +52)"
+                label="Teléfono"
                 id="phone"
                 type="tel"
                 required={false}
                 value={formData.phone ?? ''}
                 onChange={handleChange}
                 error={errors.phone}
+                placeholder="+52 1234567890"
               />
-              <div className="space-y-1">
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  Mensaje
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  required
-                  value={formData.message}
-                  onChange={handleChange}
-                  className={`mt-1 block w-full rounded-md shadow-sm
-                    ${
-                      errors.message
-                        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                        : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    }
-                    dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
-                />
-                {errors.message && (
-                  <p className="text-sm text-red-600 dark:text-red-400">
-                    {errors.message}
-                  </p>
-                )}
-              </div>
+              <InputField
+                label="Mensaje"
+                id="message"
+                type="textarea"
+                required
+                value={formData.message}
+                onChange={handleChange}
+                error={errors.message}
+                placeholder="Cuéntame sobre tu proyecto..."
+              />
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 
-                  dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors disabled:opacity-50
-                  disabled:cursor-not-allowed font-medium text-lg"
+                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg
+                  hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600
+                  transition-colors duration-200 disabled:opacity-50
+                  disabled:cursor-not-allowed font-medium text-lg
+                  focus:outline-none focus:ring-2 focus:ring-blue-500
+                  focus:ring-offset-2 dark:focus:ring-offset-gray-800"
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
+                    <Loader2 className="animate-spin -ml-1 mr-3 h-5 w-5" />
                     Enviando...
                   </span>
                 ) : (

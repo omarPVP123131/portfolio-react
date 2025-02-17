@@ -19,7 +19,9 @@ export type Experience = {
   period: string;
   description: string[];
   icon: React.ReactNode;
+  skills?: string[]; // ahora es opcional
 };
+
 
 export type Testimonial = {
   name: string;
@@ -32,7 +34,7 @@ export interface NavbarProps {
   darkMode: boolean;
   toggleDarkMode: () => void;
   isMenuOpen: boolean;
-  setIsMenuOpen: (value: boolean) => void;
+  setIsMenuOpen: (isOpen: boolean) => void;
   activeSection: string;
   handleScroll: (ref: React.RefObject<HTMLElement>) => void;
   refs: {
@@ -44,7 +46,6 @@ export interface NavbarProps {
     contacto: React.RefObject<HTMLElement>;
   };
 }
-
 export interface MenuItem {
   name: string;
   ref: React.RefObject<HTMLElement>;

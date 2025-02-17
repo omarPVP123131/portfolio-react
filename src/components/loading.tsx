@@ -1,10 +1,11 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 export const Loading = () => {
   return (
     <div
+      role="status"
+      aria-live="polite"
       className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 text-white"
-      aria-label="Cargando contenido, por favor espere"
     >
       <motion.div
         className="relative flex items-center justify-center"
