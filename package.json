@@ -2,7 +2,9 @@
   "name": "portafolio-omar-palomares-velasco",
   "version": "5.3.0",
   "private": true,
-  "dependencies": {
+  "engines": {
+    "node": "26.x"
+  },  "dependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "react": "^18.3.1",
