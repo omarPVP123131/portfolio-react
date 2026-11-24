@@ -1,58 +1,32 @@
+export type Language = "es" | "en";
+
+export type LocalizedCopy = {
+  es: string;
+  en: string;
+};
+
+export type ProjectSection = "featured" | "more";
+export type ProjectStatusTone = "stable" | "available" | "building" | "planning" | "unconfirmed";
+export type ThemeVariant = "phosphor" | "amber" | "cyan" | "graphite";
+
 export type Project = {
+  slug: string;
   title: string;
-  description: string;
+  category: LocalizedCopy;
+  detail: LocalizedCopy;
   tags: string[];
-  image: string;
   link: string;
-  github?: string;
+  section: ProjectSection;
+  status?: { label: LocalizedCopy; tone: ProjectStatusTone };
+  credit?: LocalizedCopy;
+  screenshot?: string;
+  screenshotWebp?: string;
+  poster?: string;
+  posterWebp?: string;
+  width?: number;
+  height?: number;
+  screenshotAlt?: LocalizedCopy;
+  secondaryLink?: { href: string; label: LocalizedCopy };
+  /** Short mono caption, only used when it adds real information. */
+  caption?: string;
 };
-
-export type Skill = {
-  name: string;
-  level: number;
-  icon: JSX.Element;
-};
-
-export type Experience = {
-  company: string;
-  position: string;
-  period: string;
-  description: string[];
-  icon: React.ReactNode;
-  skills?: string[]; // ahora es opcional
-};
-
-
-export type Testimonial = {
-  name: string;
-  position: string;
-  content: string;
-  avatar: string;
-};
-
-export interface NavbarProps {
-  darkMode: boolean;
-  toggleDarkMode: () => void;
-  isMenuOpen: boolean;
-  setIsMenuOpen: (isOpen: boolean) => void;
-  activeSection: string;
-  handleScroll: (ref: React.RefObject<HTMLElement>) => void;
-  refs: {
-    inicio: React.RefObject<HTMLElement>;
-    proyectos: React.RefObject<HTMLElement>;
-    habilidades: React.RefObject<HTMLElement>;
-    experiencia: React.RefObject<HTMLElement>;
-    testimonios: React.RefObject<HTMLElement>;
-    contacto: React.RefObject<HTMLElement>;
-  };
-}
-export interface MenuItem {
-  name: string;
-  ref: React.RefObject<HTMLElement>;
-}
-
-export interface Section {
-  id: string;
-  ref: React.RefObject<HTMLElement>;
-  title: string;
-}

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Omar Palomares Velasco — Résumé</title>
+<style>
+  @page { size: letter; margin: 0; }
+  @font-face { font-family: "Space Grotesk"; src: url("fonts/space-grotesk-latin-wght-normal.woff2") format("woff2"); font-weight: 300 700; font-display: swap; }
+  @font-face { font-family: "JetBrains Mono"; src: url("fonts/jetbrains-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 800; font-display: swap; }
+  :root {
+    --paper: #fbfbf8; --panel: #f0efe7; --ink: #12161c; --soft: #383f47; --muted: #6a7078;
+    --accent: #4d7c0f; --accent-deep: #365314; --rule: #e2e1d6;
+    --sans: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 216mm; }
+  body {
+    background: var(--paper); color: var(--ink); font-family: var(--sans);
+    font-size: 8.7pt; line-height: 1.36;
+    padding: 10mm 12mm 8mm; height: 279mm;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    display: flex; flex-direction: column; position: relative;
+  }
+
+  /* ---------- Header ---------- */
+  .kicker {
+    font-family: var(--mono); font-size: 6.6pt; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--accent-deep); display: flex; align-items: center; gap: 6pt;
+  }
+  .kicker::before { content: ""; width: 14pt; height: 2pt; background: var(--accent); display: inline-block; }
+  h1 {
+    font-size: 28pt; line-height: .98; letter-spacing: -0.035em; font-weight: 700;
+    margin-top: 6pt; color: var(--ink);
+  }
+  h1 .dot { color: var(--accent); }
+  .role {
+    font-family: var(--mono); font-size: 7.6pt; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--soft); margin-top: 6pt;
+  }
+  .contact {
+    display: flex; flex-wrap: wrap; gap: 5pt 14pt; margin-top: 7pt; padding-top: 7pt;
+    border-top: 0.7pt solid var(--rule);
+    font-family: var(--mono); font-size: 6.6pt; color: var(--soft);
+  }
+  .contact a { color: var(--accent-deep); text-decoration: none; font-weight: 600; }
+  .contact span { display: inline-flex; align-items: center; gap: 4pt; white-space: nowrap; }
+
+  /* ---------- Body grid ---------- */
+  main { display: grid; grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr); gap: 14pt; margin-top: 9pt; flex: 1; }
+  section { margin-bottom: 9pt; }
+  h2 {
+    font-family: var(--mono); font-size: 6.6pt; letter-spacing: .24em; text-transform: uppercase;
+    color: var(--muted); display: flex; align-items: center; gap: 6pt; margin-bottom: 6pt;
+  }
+  h2::after { content: ""; flex: 1; height: 0.7pt; background: var(--rule); }
+  h2 b { color: var(--accent); font-weight: 800; }
+
+  .lead { font-size: 9.05pt; line-height: 1.47; color: var(--soft); max-width: 64ch; }
+  .lead strong { color: var(--ink); }
+
+  /* ---------- Projects ---------- */
+  .project { padding: 5pt 0 6pt; border-bottom: 0.7pt solid var(--rule); break-inside: avoid; }
+  .project:last-child { border-bottom: 0; padding-bottom: 0; }
+  .project + .project { padding-top: 6pt; }
+  .stack-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10pt; }
+  .project-title { font-weight: 700; font-size: 9.4pt; letter-spacing: -0.015em; }
+  .project-title .tag {
+    font-family: var(--mono); font-size: 5.4pt; letter-spacing: .12em; color: var(--accent-deep);
+    border: 0.7pt solid #cfe3b0; background: #f2f7e8; border-radius: 2pt; padding: 1pt 3pt;
+    vertical-align: 1.2pt; margin-right: 4pt; text-transform: uppercase;
+  }
+  .project-link { font-family: var(--mono); font-size: 5.9pt; color: var(--muted); text-decoration: none; white-space: nowrap; }
+  .project-link:hover { color: var(--accent-deep); }
+  .stack { font-family: var(--mono); font-size: 5.7pt; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-deep); margin: 2pt 0 2.5pt; }
+  .project p { font-size: 8.1pt; color: var(--soft); line-height: 1.44; }
+
+  .workshop { display: grid; gap: 3.5pt; margin-top: 2pt; }
+  .workshop-row { display: grid; grid-template-columns: 46pt 1fr; gap: 8pt; font-size: 7.9pt; }
+  .workshop-row b { font-size: 7.8pt; }
+  .workshop-row span { color: var(--soft); }
+  .workshop-row .state { font-family: var(--mono); font-size: 5.4pt; letter-spacing: .1em; text-transform: uppercase; color: #92740f; }
+
+  /* ---------- Right rail ---------- */
+  aside { display: flex; flex-direction: column; gap: 9pt; }
+  .panel { background: var(--panel); border-radius: 6pt; padding: 9pt 10pt; }
+  .panel h2 { color: var(--muted); margin-bottom: 5pt; }
+  .skill-block { display: grid; gap: 4pt; }
+  .skill-block b {
+    font-family: var(--mono); font-size: 5.6pt; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent-deep); display: block; margin-bottom: 1pt;
+  }
+  .skill-block span { font-size: 7.9pt; color: var(--soft); line-height: 1.45; }
+
+  ul.clean { list-style: none; }
+  ul.clean li { font-size: 7.9pt; color: var(--soft); line-height: 1.42; padding-left: 8pt; position: relative; margin-bottom: 3pt; }
+  ul.clean li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
+  ul.clean li strong { color: var(--ink); }
+  .edu-row { border-left: 1.6pt solid #d4d2c4; padding-left: 7pt; margin-bottom: 5pt; }
+  .edu-row:last-child { margin-bottom: 0; }
+  .edu-row strong { font-size: 8pt; letter-spacing: -0.01em; }
+  .edu-row p { font-size: 7.3pt; color: var(--soft); line-height: 1.4; margin-top: 1pt; }
+  .edu-row .when { font-family: var(--mono); font-size: 5.6pt; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 8pt; padding-top: 6pt; border-top: 0.7pt solid var(--rule);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12pt;
+    font-family: var(--mono); font-size: 5.8pt; color: var(--muted); letter-spacing: .04em;
+  }
+  footer a { color: var(--accent-deep); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="kicker">Open to remote · Valle de Chalco, MX</p>
+  <h1>Omar Palomares<br>Velasco<span class="dot">.</span></h1>
+  <p class="role">Software Engineer · Systems · Languages · Product</p>
+  <div class="contact">
+    <span><a href="mailto:omarpalvel@gmail.com">omarpalvel@gmail.com</a></span>
+    <span>+52 55 8602 4170</span>
+    <span><a href="https://github.com/omarPVP123131">github.com/omarPVP123131</a></span>
+    <span><a href="https://www.linkedin.com/in/omar-palomares-velasco-b9ab04416/">linkedin.com/in/omar-palomares-velasco</a></span>
+  </div>
+</header>
+
+<main>
+  <div>
+    <section>
+      <h2><b>01</b> Profile</h2>
+      <p class="lead"><strong>Computer Engineering student (UAEM — Valle de Chalco)</strong> building systems from the bootloader up: a from-scratch x86_64 operating system, a programming language with its own compiler, and shipping products for desktop and web — mostly in <strong>Rust</strong>. I learn by building: prototype, break, document. Every project links to real code and real screenshots.</p>
+    </section>
+
+    <section>
+      <h2><b>02</b> Featured projects</h2>
+
+      <div class="project">
+        <div class="project-title"><span class="tag">Flagship</span>Portix OS — Operating System</div>
+        <div class="stack-row"><div class="stack">x86_64 · Assembly · Rust (no_std) · VFS · QEMU</div><a class="project-link" href="https://github.com/omarPVP123131/Portix-OS">github.com/omarPVP123131/Portix-OS</a></div>
+        <p>Built from zero, layer by layer: assembly loader, no_std Rust kernel, memory manager, virtual file system, drivers and a graphical desktop booting under QEMU. <strong>~20,000 lines of code.</strong></p>
+      </div>
+
+      <div class="project">
+        <div class="project-title">Lumen — Programming language & compiler</div>
+        <div class="stack-row"><div class="stack">Rust · VM · Borrow checker · WASM</div><a class="project-link" href="https://github.com/omarPVP123131/Lumen">github.com/omarPVP123131/Lumen</a></div>
+        <p>A language with its own VM, borrow checker and a self-hosting compiler. Its WebAssembly playground renders a Pythagoras tree drawing <strong>~4,095 segments</strong> live through the LUMEN ↔ JS bridge.</p>
+      </div>
+
+      <div class="project">
+        <div class="project-title">PhotoLab — Photoelectric Effect Lab</div>
+        <div class="stack-row"><div class="stack">Rust · WASM · Tauri 2 · Svelte 5</div><a class="project-link" href="https://github.com/omarPVP123131/Software-Casero-Proyect">github.com/omarPVP123131/Software-Casero-Proyect</a></div>
+        <p>Rust physics engine compiled to WebAssembly, Tauri/Svelte desktop UI, downloadable Windows release. Real physics, not a mockup.</p>
+      </div>
+
+      <div class="project">
+        <div class="project-title">Wave-Particle Duality — 3D Double Slit</div>
+        <div class="stack-row"><div class="stack">Rust · Macroquad · 3D</div><a class="project-link" href="https://github.com/omarPVP123131/Dualidad-Onda-Fisica">github.com/omarPVP123131/Dualidad-Onda-Fisica</a></div>
+        <p>Simulator where each photon builds the interference pattern one launch at a time, with a live histogram. Collaboration with <strong>Leonardo Miguel Vega Carbajal</strong>. Release v1.0.0.</p>
+      </div>
+
+      <div class="project">
+        <div class="project-title">POS Rust — Point of Sale for desktop</div>
+        <div class="stack-row"><div class="stack">Rust · egui · SQLite · ESC/POS</div><a class="project-link" href="https://github.com/omarPVP123131/Pos-Rust">github.com/omarPVP123131/Pos-Rust</a></div>
+        <p>Point of sale for grocery stores: catalog, open-ticket sales, cash-drawer close-out, F1–F12 shortcuts, SQLite persistence and a local/HTTP API with documented adapters.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2><b>03</b> In development</h2>
+      <div class="workshop">
+        <div class="workshop-row"><b>Zaphyr</b><span><span class="state">in development</span><br>Statically-typed procedural compiler in Rust, ELF/PE output. Core language still under construction.</span></div>
+        <div class="workshop-row"><b>NetSniffer</b><span><span class="state">available</span><br>IPv4 traffic analyzer in Python: capture, filters, TCP/UDP/ICMP decoding.</span></div>
+        <div class="workshop-row"><b>NetScope</b><span><span class="state">in planning</span><br>PCAP/PCAPNG analyzer in Rust; today it exists as a documented proposal, no code yet.</span></div>
+      </div>
+    </section>
+  </div>
+
+  <aside>
+    <div class="panel">
+      <h2><b>04</b> Stack</h2>
+      <div class="skill-block">
+        <div><b>Languages</b><span>Rust · C · x86_64 Assembly · Python · JavaScript/TypeScript · SQL</span></div>
+        <div><b>Systems</b><span>no_std kernels · VFS · memory/processes · ELF/PE · Linux · QEMU · WASM</span></div>
+        <div><b>Product</b><span>Tauri 2 · Svelte 5 · egui · Macroquad · React · SQLite · ESC/POS</span></div>
+        <div><b>Tools</b><span>Git · GitHub · Vite · Chromium · technical writing</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><b>05</b> Education</h2>
+      <div class="edu-row"><strong>Computer Engineering</strong><p><span class="when">2026 — present</span><br>UAEM — Valle de Chalco</p></div>
+      <div class="edu-row"><strong>Dual training TESCHA–CECyTEM</strong><p><span class="when">2022 — 2026</span><br>Computer Equipment Support & Maintenance Technician · CECyTEM Valle de Chalco</p></div>
+      <div class="edu-row"><strong>Middle School</strong><p><span class="when">2018 — 2021</span><br>Middle school · Valle de Chalco · graduated 2021</p></div>
+    </div>
+
+    <div class="panel">
+      <h2><b>06</b> Languages & courses</h2>
+      <ul class="clean">
+        <li><strong>Spanish</strong> — native · <strong>English</strong> — basic · <strong>Russian</strong> — novice</li>
+        <li>HTML & CSS fundamentals · Professional JavaScript course</li>
+        <li>Professional Git course · Professional Python course</li>
+        <li>Professional Flutter course · Databases</li>
+      </ul>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  <span>Open to remote roles & internships · Valle de Chalco, MX · Remote-friendly</span>
+  <span><a href="https://github.com/omarPVP123131">github.com/omarPVP123131</a> · nov 2026</span>
+</footer>
+
+</body>
+</html>

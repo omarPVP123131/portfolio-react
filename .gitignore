@@ -1,23 +1,33 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# Dependencias
 /node_modules
 /.pnp
 .pnp.js
 
-# testing
+# Testing
 /coverage
 
-# production
+# Producción (el bundle vive en los paquetes .zip, no en git)
 /build
 
-# misc
-.DS_Store
+# Entorno y secretos
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
+
+# Artefactos generados / empaquetados
+/HISTORIAL-GIT.bundle
+docs/audit/

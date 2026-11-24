@@ -1,42 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/logo.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+    <meta name="theme-color" content="#0b0f0d" />
+    <meta name="description" content="Omar Palomares Velasco — desarrollador de sistemas y software: sistema operativo, lenguaje con compilador propio y software de escritorio real en Rust." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Omar Palomares Velasco — Desarrollador de sistemas y software" />
+    <meta property="og:description" content="Sistema operativo propio, un lenguaje con compilador propio y software de escritorio real en Rust. Ingeniería en Computación — UAEM, Valle de Chalco." />
+    <meta property="og:site_name" content="Omar Palomares Velasco" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <!-- Al desplegar: og:url y og:image deben ser URL ABSOLUTAS del dominio final.
+         %PUBLIC_URL% es relativo hasta que se defina PUBLIC_URL en el build. -->
+    <meta property="og:image" content="%PUBLIC_URL%/images/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Portada del portafolio de Omar Palomares Velasco: nombre, descripción y el escritorio real de Portix OS." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Omar Palomares Velasco — Desarrollador de sistemas y software" />
+    <meta name="twitter:description" content="Sistema operativo propio, un lenguaje con compilador propio y software de escritorio real en Rust." />
+    <meta name="twitter:image" content="%PUBLIC_URL%/images/og.png" />
+    <meta name="author" content="Omar Palomares Velasco" />
+    <script>
+      (function () {
+        var theme = 'phosphor';
+        try {
+          var saved = window.localStorage.getItem('portfolio-theme');
+          if (saved === 'amber' || saved === 'cyan' || saved === 'graphite') theme = saved;
+        } catch (error) {}
+        var colors = { phosphor: '#0b0f0d', amber: '#120e08', cyan: '#071013', graphite: '#101012' };
+        document.documentElement.setAttribute('data-theme', theme);
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', colors[theme]);
+      })();
+    </script>
+    <link rel="preload" as="image" href="%PUBLIC_URL%/images/project-portix-real.webp" type="image/webp" fetchpriority="high" />
+    <link rel="preload" href="/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin /><link rel="preload" href="/fonts/jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin /><link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>Mi portafolio</title>
+    <title>Omar Palomares Velasco — Desarrollador de sistemas y software</title>
   </head>
   <body>
+    <noscript>Activa JavaScript para ver este portafolio.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>

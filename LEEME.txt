@@ -1,0 +1,44 @@
+PORTAFOLIO — Omar Palomares Velasco
+Desarrollador de sistemas y software · Valle de Chalco, MX · Remoto
+https://github.com/omarPVP123131
+
+CONTENIDO DE ESTE PAQUETE
+─────────────────────────
+portfolio (raíz)  → código fuente (React 18 + TypeScript, Create React App)
+  public/         → assets reales (capturas WebP/GIF/posters) + CVs en PDF
+  src/            → app (ES/EN, 4 variantes oscuras, lightbox, reduced-motion)
+  docs/           → investigación de diseño aplicada (design-research.md)
+build/            → salida de producción LISTA para hosting estático
+cv/               → CVs en PDF (ES y EN, 1 página Carta c/u) + fuentes HTML
+                   y fuentes (fonts/) de las que se generaron
+HISTORIAL-GIT.md  → historial legible del repo (commit por commit)
+HISTORIAL-GIT.bundle → historial restaurable: git clone HISTORIAL-GIT.bundle
+
+CÓMO VERLO
+──────────
+Opción A (desarrollo):
+  cd <esta carpeta>
+  npm install
+  npm start                 → http://localhost:3000
+
+Opción B (solo servir lo ya compilado):
+  npx serve -s build        → http://localhost:3000
+  (o sube el contenido de build/ a cualquier hosting estático:
+   Vercel, Netlify, GitHub Pages, Cloudflare Pages…)
+
+NOTAS
+─────
+• El sitio es bilingüe (ES/EN) y recuerda el idioma elegido (localStorage).
+• 4 variantes de acento (fósforo/ámbar/cian/grafito), selector en el footer.
+• Edad mostrada en la web se calcula automáticamente desde 21-may-2007.
+• Capturas reales; ninguna inventada. NetScope figura como "en planificación".
+• CVs enlazados según idioma activo: public/cv-omar-palomares-velasco-{es,en}.pdf
+
+ESTADO CONOCIDO / PENDIENTE
+───────────────────────────
+• CVs: rediseñados (v5.2) — una sola página Carta, layout de dos columnas,
+  tipografía Space Grotesk / JetBrains Mono, datos al día (Ingeniería en
+  Computación UAEM, 2026—actualidad). Fuentes HTML en cv/ y PDFs generados
+  con Chromium print-to-PDF.
+• node_modules/ NO está incluido (se regenera con `npm install`).
+• No se ha publicado ni empujado nada a ningún destino aún.
